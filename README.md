@@ -1,115 +1,96 @@
-# ✂️ Divisor de Archivos de Audio
+# 🎵 Cortador de Audio para Windows
 
-Herramienta para dividir archivos WAV grandes en fragmentos manejables. Ideal para preparar material de audio que excede límites de tamaño en plataformas.
+Herramienta intuitiva para dividir archivos WAV grandes en fragmentos manejables. ¡Con interfaz gráfica y barra de progreso!
 
+## 🌟 Características Principales
+- **Selector de archivos integrado** con inicio en Documentos
+- **Barra de progreso visual** con porcentaje de avance
+- **Mensajes con emojis** para mejor experiencia de usuario
+- **Auto-detector de errores** con alertas claras
+- **Salida en misma carpeta** del archivo original
 
-## 🌟 Para Todos los Públicos
+## 📦 Requisitos Mínimos
+- Windows 10/11 (64 bits)
+- Python 3.8+ instalado
+- [FFmpeg para Windows](https://ffmpeg.org/download.html#build-windows)
 
-**¿Para qué sirve?**  
-Transforma archivos de audio gigantes en varios trozos más pequeños automáticamente. Perfecto si necesitas:
-- Subir podcasts a plataformas con límites de tamaño
-- Preparar muestras de audio para análisis
-- Dividir grabaciones largas en capítulos
+## 🚀 Instalación Rápida
 
-## 🧩 Requisitos Básicos
-- **Tu archivo de audio**: Cualquier archivo .WAV (Ej: `grabacion_concert.wav`)
-- **Espacio en disco**: 2x el tamaño del archivo original
-- **Sistema**: Windows/macOS/Linux
-
-## 🚀 Cómo Usarlo en 3 Pasos
-
-1. **Prepara tu audio**  
-   - Asegúrate que sea formato .WAV
-   - Guárdalo en una carpeta fácil de acceder (Ej: `Escritorio/Audios`)
-
-2. **Configura el script**  
-   Abre `cortar-audio.py` y cambia esta línea:  
-   ```python
-   archivo_wav = "TU_RUTA_COMPLETA.wav"  # Ej: "C:/Usuarios/MiUsuario/Escritorio/grabacion.wav"
-   ```
-
-3. **Ejecuta el programa**  
-   En tu terminal:  
-   ```bash
-   python cortar-audio.py
-   ```
-
-**Resultado Final**:  
-Obtendrás varios archivos como `grabacion_parte1.wav`, `grabacion_parte2.wav`, etc.
-
----
-
-## 🛠️ Versión para Técnicos
-
-### 📋 Dependencias
-```bash
+1. **Instalar dependencias** (ejecutar en PowerShell):
+```powershell
 pip install pydub tqdm
 ```
-**Requisito adicional**:  
-Instalar [FFmpeg](https://ffmpeg.org/) y agregarlo al PATH del sistema.
-
-### ⚙️ Funcionamiento Interno
-```python
-# Lógica clave de división
-duracion_fragmento_ms = math.floor(duracion_total_ms * (tamano_max_bytes / tamano_total))
-```
-
-**Parámetros Configurables**:
-- Tamaño máximo por fragmento (MB):  
-  ```python
-  tamano_max_mb=300  # Valor por defecto - modificar según necesidad
-  ```
-- Formato de salida:  
-  Cambiar `format="wav"` por otros soportados (mp3, ogg, etc.)
-
-### 📊 Proceso Detallado
-1. Calcula relación tamaño/duración del audio original
-2. Divide en segmentos proporcionales al límite de tamaño
-3. Exporta cada fragmento conservando calidad original
-4. Muestra progreso con barra interactiva
-
-### 🚨 Solución de Problemas Comunes
-
-**Error: "File not found"**  
-- Verificar rutas absolutas:  
-  ```python
-  "C:\\Carpeta\\Subcarpeta\\archivo.wav"  # Windows
-  "/home/usuario/audios/archivo.wav"      # Linux/macOS
-  ```
-
-**Error de codec**  
-Instalar FFmpeg y reiniciar consola:  
-```bash
-# Ubuntu/Debian
-sudo apt install ffmpeg
-
-# Windows (usando Chocolatey)
+2. **Descargar FFmpeg**:
+```powershell
+# Con Chocolatey (admin):
 choco install ffmpeg
+
+# Manualmente:
+# 1. Descargar de https://www.gyan.dev/ffmpeg/builds/
+# 2. Agregar a PATH: Panel de control → Sistema → Configuración avanzada
 ```
 
-**Fragmentos de tamaño desigual**  
-- Los últimos fragmentos pueden ser más pequeños por ajuste de división
-- Para igualar duraciones, usar:  
-  ```python
-  duracion_fragmento_ms = 600000  # 10 minutos exactos (600,000 ms)
-  ```
+3. **Guardar el script** como `cortar_audio.py`
 
----
+## 🖱️ Modo de Uso
+
+1. **Hacer doble clic** en `cortar_audio.py`
+2. Seleccionar archivo WAV en el explorador
+3. Esperar a que termine la división
+4. **¡Listo!** Los fragmentos estarán en la misma carpeta
+
+**Ejemplo de salida**:
+```
+MiAudio_original.wav → 
+├── MiAudio_parte1.wav
+├── MiAudio_parte2.wav
+└── MiAudio_parte3.wav
+```
+
+## ⚙️ Personalización Avanzada
+
+### Cambiar tamaño máximo por fragmento
+Editar línea 19 del script:
+```python
+def dividir_wav(archivo_entrada, tamano_max_mb=300):  # Cambiar 300 a tamaño deseado (MB)
+```
+
+### Modificar formato de salida
+Cambiar línea 52:
+```python
+fragmento.export(nombre_salida, format="mp3")  # Cambiar "wav" a mp3, ogg, etc.
+```
+
+## 🚨 Solución de Problemas
+
+**Error: "FileNotFoundError"**
+- Verificar que FFmpeg esté instalado y en PATH
+- Ejecutar PowerShell como administrador:
+```powershell
+[System.Environment]::SetEnvironmentVariable("Path", "$env:Path;C:\ruta\a\ffmpeg\bin", "Machine")
+```
+
+**El progreso se congela**
+- Desactivar antivirus temporalmente
+- Usar rutas cortas sin espacios: `C:\Audios\mi_audio.wav`
+
+**Calidad de audio baja**
+- Asegurarse que el archivo original sea WAV sin compresión
+- Aumentar el tamaño máximo por fragmento
 
 ## 📌 Ejemplo Práctico
 
-**Archivo Original**:  
-- `entrevista.wav` (850 MB, 45 minutos)
-
-**Ejecución**:  
-```bash
-python cortar-audio.py
+**Caso**: Dividir grabación de 2 horas (1.2 GB) para email
+```python
+tamano_max_mb=25  # Límite común para adjuntos
 ```
+**Resultado**:
+- 48 fragmentos de ≈25 MB cada uno
+- Duración por parte: ~2.5 minutos
 
-**Resultado**:  
-3 archivos:  
-1. `entrevista_parte1.wav` (300 MB, 16 min)
-2. `entrevista_parte2.wav` (300 MB, 16 min)  
-3. `entrevista_parte3.wav` (250 MB, 13 min)
+## 📄 Licencia
+Este proyecto usa licencia MIT. Ver [LICENSE](LICENSE) para detalles.
 
 ---
+
+[Repositorio GitHub](https://github.com/ChichaDePardos/descarga-gaceta-indecopi) | [Documentación FFmpeg](https://ffmpeg.org/documentation.html)
